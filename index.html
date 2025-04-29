@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated Title -->
+    <title>Carmen Sandiego Clone - International Detective</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="crt-overlay"></div> <!-- Optional: For CRT effect -->
+    <div id="app-container">
+        <header class="app-header">
+             <!-- Updated Heading -->
+            <h1><i class="fas fa-user-secret"></i> Carmen Sandiego Clone</h1>
+        </header>
+
+        <main id="game-container">
+            <!-- Status Display -->
+            <section id="status-view" class="panel status-panel">
+                <h2><i class="fas fa-clipboard-list"></i> Status Report</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <label>Location:</label>
+                        <span id="current-city">CLASSIFIED</span>
+                    </div>
+                    <div class="status-item">
+                        <label>Time Left:</label>
+                        <span id="time-left">ASSIGNMENT PENDING</span>
+                    </div>
+                    <div class="status-item">
+                        <label>Warrant:</label>
+                        <span id="warrant-status" class="status-no">No</span>
+                    </div>
+                     <div class="status-item">
+                        <label>Investigations:</label>
+                        <span id="investigations-left">N/A</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Text/Dialog Area -->
+            <section id="text-view" class="panel text-panel">
+                <h2><i class="fas fa-file-alt"></i> Intel Feed</h2>
+                <p id="main-text" class="info-text">Awaiting briefing, Detective. Stand by...</p>
+            </section>
+
+            <!-- Action Area -->
+            <section id="action-view" class="panel action-panel">
+                <h2><i class="fas fa-tasks"></i> Available Actions</h2>
+                <div id="actions-wrapper">
+                    <!-- Initial Action -->
+                    <div id="initial-actions">
+                        <button id="start-game-button" class="action-button primary-action">
+                            <i class="fas fa-play"></i> Accept New Case
+                        </button>
+                    </div>
+                    <!-- Investigation Actions (Dynamic) -->
+                    <div id="investigation-actions" class="action-group hidden">
+                        <!-- Changed Heading -->
+                        <h3><i class="fas fa-search"></i> Investigate Options:</h3>
+                        <div class="button-group" id="investigation-buttons">
+                            <!-- Investigation option buttons will be added here by JS -->
+                        </div>
+                         <button id="go-to-travel-button" class="action-button secondary-action">
+                            <i class="fas fa-plane-departure"></i> Proceed to Travel
+                         </button>
+                    </div>
+                    <!-- Travel Actions (Dynamic) -->
+                    <div id="travel-actions" class="action-group hidden">
+                        <h3><i class="fas fa-map-marked-alt"></i> Select Destination:</h3>
+                         <div class="button-group" id="travel-buttons">
+                            <!-- Travel location buttons will be added here by JS -->
+                        </div>
+                    </div>
+                </div>
+                 <!-- Warrant Button (Always visible but maybe disabled) -->
+                 <div id="warrant-actions">
+                     <button id="open-warrant-button" class="action-button warrant-action" disabled>
+                        <i class="fas fa-gavel"></i> Issue Arrest Warrant
+                     </button>
+                 </div>
+            </section>
+
+            <!-- Message Area -->
+            <section id="message-area" class="panel message-panel">
+                 <p id="game-message" class="game-message"> </p> <!-- Non-breaking space for height -->
+            </section>
+
+            <!-- Warrant Interface (Modal - Initially Hidden) -->
+            <div id="warrant-modal-backdrop" class="hidden">
+                <section id="warrant-interface" class="panel warrant-panel">
+                    <button id="close-warrant-button" class="close-button" aria-label="Close Warrant Interface">×</button>
+                    <h2><i class="fas fa-user-edit"></i> Compile Warrant Details</h2>
+                    <p>Log suspect characteristics based on gathered intel:</p>
+                    <form id="warrant-form">
+                        <div class="form-group">
+                            <label for="warrant-gender"><i class="fas fa-venus-mars"></i> Gender:</label>
+                            <select id="warrant-gender" name="gender" required>
+                                <option value="">--Select Gender--</option>
+                                <!-- Options will be added by JS -->
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="warrant-hobby"><i class="fas fa-puzzle-piece"></i> Hobby:</label>
+                            <select id="warrant-hobby" name="hobby" required>
+                                <option value="">--Select Hobby--</option>
+                                 <!-- Options will be added by JS -->
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="warrant-hair"><i class="fas fa-user"></i> Hair Color:</label>
+                            <select id="warrant-hair" name="hair_color" required>
+                                 <option value="">--Select Hair Color--</option>
+                                 <!-- Options will be added by JS -->
+                            </select>
+                         </div>
+                         <div class="form-group">
+                             <label for="warrant-feature"><i class="fas fa-glasses"></i> Accessory:</label>
+                             <select id="warrant-feature" name="accessory" required>
+                                 <option value="">--Select Accessory--</option>
+                                 <!-- Options will be added by JS -->
+                             </select>
+                         </div>
+                         <div class="form-group">
+                            <label for="warrant-vehicle"><i class="fas fa-car"></i> Vehicle:</label>
+                            <select id="warrant-vehicle" name="vehicle" required>
+                                <option value="">--Select Vehicle--</option>
+                                <!-- Options will be added by JS -->
+                            </select>
+                         </div>
+                        <div class="form-actions">
+                            <button type="submit" class="action-button primary-action">
+                                <i class="fas fa-check"></i> Issue Warrant
+                            </button>
+                            <!-- Cancel button removed, use close button 'X' -->
+                        </div>
+                    </form>
+                </section>
+            </div> <!-- /Warrant Modal Backdrop -->
+
+        </main>
+    </div> <!-- /app-container -->
+
+    <script src="data.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

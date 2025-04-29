@@ -1,0 +1,396 @@
+/* ==================== VARIABLES & FONTS ==================== */
+:root {
+    --bg-color:          #0a192f; /* Deep Navy */
+    --panel-bg:          rgba(13, 30, 55, 0.85); /* Slightly transparent panel */
+    --panel-border:      #17a2b8; /* Cyan/Teal Accent */
+    --text-primary:      #ccd6f6; /* Light Blue/Gray */
+    --text-secondary:    #8892b0; /* Slate Gray */
+    --text-heading:      #e6f1ff; /* Brighter Heading */
+    --text-accent:       #64ffda; /* Mint Green Accent */
+    --text-mono:         #a8b2d1; /* Lighter Mono Text */
+    --text-warrant-yes:  #64ffda; /* Mint Green */
+    --text-warrant-no:   #ff7b72; /* Salmon Red */
+
+    --button-primary-bg: var(--text-accent);
+    --button-primary-text: var(--bg-color);
+    --button-primary-hover: #52d1bc;
+    --button-secondary-bg: transparent;
+    --button-secondary-text: var(--text-accent);
+    --button-secondary-border: var(--text-accent);
+    --button-secondary-hover-bg: rgba(100, 255, 218, 0.1);
+    --button-disabled-bg: #2a3b52;
+    --button-disabled-text: #6c7a8f;
+    --warrant-button-bg: #ffc107; /* Amber */
+    --warrant-button-text: #1a202c; /* Dark Gray */
+    --warrant-button-hover: #e0a800;
+
+    --font-heading:      'Bebas Neue', sans-serif;
+    --font-body:         'Poppins', sans-serif;
+    --font-mono:         'IBM Plex Mono', monospace; /* Retro Terminal Font */
+
+    --border-radius:     4px;
+    --panel-padding:     1.5rem;
+    --transition-speed:  0.25s;
+}
+
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;600&display=swap');
+
+/* ==================== BASE & RESET ==================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align container to top */
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+}
+
+/* Optional CRT Overlay Effect */
+#crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.6;
+    animation: flicker 0.15s infinite;
+}
+@keyframes flicker { /* Subtle flicker */
+  0% { opacity: 0.5; } 50% { opacity: 0.6; } 100% { opacity: 0.5; }
+}
+
+
+/* ==================== APP CONTAINER & HEADER ==================== */
+#app-container {
+    width: 100%;
+    max-width: 1000px; /* Wider max width */
+    margin: 0 auto;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 1rem;
+}
+
+.app-header h1 {
+    font-family: var(--font-heading);
+    color: var(--text-accent);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(100, 255, 218, 0.3);
+}
+.app-header h1 i {
+    margin-right: 0.5rem;
+    opacity: 0.8;
+}
+
+/* ==================== GAME CONTAINER & PANELS ==================== */
+#game-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Adjust column ratio */
+    grid-template-rows: auto auto; /* Status/Text row, Action/Message row */
+    grid-template-areas:
+        "status text"
+        "action message"; /* Changed layout */
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.panel {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--border-radius);
+    padding: var(--panel-padding);
+    box-shadow: 0 0 15px rgba(23, 162, 184, 0.1); /* Subtle glow matching border */
+}
+
+.panel h2, .panel h3 {
+    font-family: var(--font-mono); /* Mono font for panel titles */
+    font-weight: 500;
+    color: var(--text-accent);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px dashed rgba(100, 255, 218, 0.3);
+    padding-bottom: 0.5rem;
+}
+.panel h2 i, .panel h3 i {
+    margin-right: 0.5rem;
+    opacity: 0.8;
+}
+
+/* Status Panel */
+.status-panel { grid-area: status; }
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column */
+    gap: 0.8rem;
+}
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+.status-item label {
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+    font-weight: 400;
+}
+.status-item span {
+    color: var(--text-mono);
+    font-weight: 500;
+    text-align: right;
+}
+#warrant-status.status-yes { color: var(--text-warrant-yes); font-weight: bold; }
+#warrant-status.status-no { color: var(--text-warrant-no); }
+
+/* Text Panel */
+.text-panel { grid-area: text; }
+.info-text {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-mono);
+    min-height: 150px; /* Ensure decent height */
+    white-space: pre-wrap; /* Preserve line breaks if needed */
+}
+
+/* Action Panel */
+.action-panel { grid-area: action; display: flex; flex-direction: column; }
+#actions-wrapper { flex-grow: 1; } /* Allow dynamic actions to fill space */
+.action-group { margin-bottom: 1.5rem; }
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* Message Panel */
+.message-panel { grid-area: message; }
+.game-message {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-accent);
+    text-align: center;
+    min-height: 1.5em; /* Prevent layout shifts */
+}
+
+
+/* ==================== BUTTONS ==================== */
+.action-button {
+    padding: 10px 18px;
+    margin: 0; /* Remove default margin */
+    cursor: pointer;
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.action-button i { opacity: 0.9; }
+
+/* Primary Button Style (Start Game, Investigate, Travel choices) */
+.action-button.primary-action {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+}
+.action-button.primary-action:hover {
+    background-color: var(--button-primary-hover);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Secondary Button Style (Go to Travel) */
+.action-button.secondary-action {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+    border: 1px solid var(--button-secondary-border);
+}
+.action-button.secondary-action:hover {
+    background-color: var(--button-secondary-hover-bg);
+    transform: translateY(-2px);
+}
+
+/* Warrant Button Style */
+.action-button.warrant-action {
+    background-color: var(--warrant-button-bg);
+    color: var(--warrant-button-text);
+}
+.action-button.warrant-action:hover {
+    background-color: var(--warrant-button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+.action-button.warrant-action:disabled {
+    background-color: var(--button-disabled-bg);
+    color: var(--button-disabled-text);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* General Disabled State */
+.action-button:disabled {
+    background-color: var(--button-disabled-bg) !important; /* Override specifics */
+    color: var(--button-disabled-text) !important;
+    border-color: transparent !important; /* Hide border if secondary */
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ==================== WARRANT MODAL ==================== */
+#warrant-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 25, 47, 0.85); /* Dark overlay */
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    opacity: 1;
+    transition: opacity var(--transition-speed) ease;
+}
+#warrant-modal-backdrop.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.warrant-panel {
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color var(--transition-speed) ease;
+}
+.close-button:hover {
+    color: var(--text-accent);
+}
+
+#warrant-form .form-group {
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+#warrant-form label {
+    flex-basis: 120px; /* Fixed label width */
+    text-align: right;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+}
+#warrant-form label i {
+    margin-right: 0.4rem;
+    width: 1em; /* Ensure consistent icon width */
+    text-align: center;
+}
+
+#warrant-form select {
+    flex-grow: 1;
+    padding: 8px 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--panel-border);
+    color: var(--text-primary);
+    border-radius: var(--border-radius);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    min-width: 150px; /* Prevent excessive shrinking */
+}
+#warrant-form select:focus {
+    outline: none;
+    border-color: var(--text-accent);
+    box-shadow: 0 0 5px rgba(100, 255, 218, 0.3);
+}
+
+#warrant-form .form-actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+/* Warrant submit button uses primary style */
+#warrant-form .form-actions .action-button {
+     font-size: 1rem; /* Slightly larger */
+}
+
+
+/* ==================== HELPERS ==================== */
+.hidden {
+    display: none !important; /* Use important to override grid/flex */
+}
+
+
+/* ==================== RESPONSIVENESS ==================== */
+@media (max-width: 768px) {
+    #game-container {
+        grid-template-columns: 1fr; /* Stack columns */
+        grid-template-areas:
+            "status"
+            "text"
+            "action"
+            "message";
+        gap: 1rem;
+    }
+    .panel { padding: 1rem; }
+    .app-header h1 { font-size: 2rem; }
+    .status-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } /* 2 columns if space */
+}
+
+@media (max-width: 480px) {
+    body { padding: 1rem 0.5rem; }
+    .panel h2, .panel h3 { font-size: 1rem; }
+    .info-text { font-size: 0.9rem; min-height: 100px; }
+    .status-grid { grid-template-columns: 1fr; } /* Force single column */
+    .status-item { font-size: 0.85rem; }
+    .action-button { font-size: 0.85rem; padding: 8px 14px; }
+    #warrant-form label { flex-basis: 100px; }
+}
